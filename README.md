@@ -1,38 +1,25 @@
-# sv
+# Web sveltekit
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This is frontend for website planetv
 
-## Creating a project
+## Setup project
 
-If you're seeing this, you've probably already done this step. Congrats!
+Must have nix package manager with flake feature for simplicity install packages and easier to update.
 
-```bash
-# create a new project in the current directory
-npx sv create
+1. Enter dev shell
 
-# create a new project in my-app
-npx sv create my-app
+```sh
+nix flake develop .
 ```
 
-## Developing
+2. Install packages via `deno`
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+```sh
+deno install
 ```
 
-## Building
+3. Running server
 
-To create a production version of your app:
-
-```bash
-npm run build
+```sh
+deno run dev
 ```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
