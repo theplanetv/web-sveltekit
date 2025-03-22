@@ -1,6 +1,6 @@
 <script>
-  import SvelteMarkdown from '@humanspeak/svelte-markdown'
-  
+  import SvelteMarkdown from '@humanspeak/svelte-markdown';
+
   import Footer from '../../../components/footer/Footer.svelte';
   import PageLayout from '../../../components/layout/PageLayout.svelte';
   import Menu from '../../../components/menu/Menu.svelte';
@@ -20,7 +20,7 @@ This is a paragraph with **bold** and <em>mixed HTML</em>.
 | Nested     | <div>**bold** and _italic_</div>        |
 | Mixed List | <ul><li>Item 1</li><li>Item 2</li></ul> |
 | Code       | <code>\`inline code\`</code>              |
-`
+`;
 </script>
 
 <PageLayout>

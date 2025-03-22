@@ -10,6 +10,7 @@
   <a
     href="/posts/"
     class="tooltip tooltip-bottom rounded-box p-2 hover:bg-gray-200"
-    data-tip="Blog Post"><MingCuteBook2Line /></a
-  >
+    data-tip="Blog Post"
+    ><MingCuteBook2Line />
+  </a>
 </nav>
