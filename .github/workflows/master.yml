@@ -1,0 +1,32 @@
+name: Github Actions
+run-name: ${{ github.actor }} is running Github Actions 🚀
+on:
+  push:
+    branches:
+      - "master"
+
+jobs:
+  enter-nix-flake-shell:
+    name: Enter nix flake shell
+    runs-on: ubuntu-24.04
+
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Setup nix
+        uses: cachix/install-nix-action@v27
+
+      - name: Enter nix devShell flake
+        uses: nicknovitski/nix-develop@v1
