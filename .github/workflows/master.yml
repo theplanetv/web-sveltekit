@@ -30,3 +30,23 @@ jobs:
 
       - name: Enter nix devShell flake
         uses: nicknovitski/nix-develop@v1
+
+  build-push-docker:
+    name: Build docker container
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Packages
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        run: |
+          docker build -t ghcr.io/${{ github.repository }}/web-sveltekit:latest .
+          docker push ghcr.io/${{ github.repository }}/web-sveltekit:latest
