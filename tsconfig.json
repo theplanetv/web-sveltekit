@@ -9,6 +9,8 @@
     "skipLibCheck": true,
     "sourceMap": true,
     "strict": true,
+    "allowArbitraryExtensions": true,
+    "types": ["svelte"],
     "moduleResolution": "node",
     "module": "es2022"
   }
