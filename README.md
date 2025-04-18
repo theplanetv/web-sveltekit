@@ -4,7 +4,8 @@ This is frontend for website planetv
 
 ## Setup project
 
-Must have nix package manager with flake feature for simplicity install packages and easier to update.
+Must have nix package manager with flake feature for simplicity install packages
+and easier to update.
 
 1. Enter dev shell
 
