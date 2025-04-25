@@ -1,102 +1,55 @@
 <script lang="ts">
-  import MultiSelect from 'svelte-multiselect';
+  import Svelecte from 'svelecte';
 
   import Footer from '../../components/footer/Footer.svelte';
   import PageLayout from '../../components/layout/PageLayout.svelte';
   import Menu from '../../components/menu/Menu.svelte';
   import MingCuteSearch2Line from '../../components/icons/MingCute-Search2Line.svelte';
-  import MingCuteTag2Line from '../../components/icons/MingCute-Tag2Line.svelte';
+  import blogtagapi from '$lib/api/blogtag';
+  import blogpostapi from '$lib/api/blogpost';
+  import type { BlogTag } from '$lib/types';
+  import { formatDate } from '$lib/utils/date';
 
   type BlogPost = {
     title: string;
     slug: string;
     created_at: string;
     updated_at: string;
+    tags: BlogTag[];
   };
 
-  let post_name: string = $state('');
-  let data_tags: string[] = [
-    'NixOS',
-    'Arch',
-    'Debian',
-    'Ubuntu',
-    'Linux Mint',
-    'Gentoo',
-    'Fedora',
-    'Red Hat OS',
-    'Bed Rock Linux',
-    'Guix',
-    'Slackware',
-    'CRUX',
-    'Void',
-    'Clear',
-    'KaOS',
-    'Manjaro',
-    'Puppy'
-  ];
+  let count_tags = $state(0);
   let selected_tags: string[] = $state([]);
-  let data_posts: BlogPost[] = [
-    {
-      title: 'Introduction to Svelte',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-10-01',
-      updated_at: '2023-10-05'
-    },
-    {
-      title: 'Advanced TypeScript Techniques',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-09-15',
-      updated_at: '2023-09-20'
-    },
-    {
-      title: 'Building a Blog with SvelteKit',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-08-10',
-      updated_at: '2023-08-15'
-    },
-    {
-      title: 'Linux Distributions Overview',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-07-25',
-      updated_at: '2023-07-30'
-    },
-    {
-      title: 'Getting Started with NixOS',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-06-12',
-      updated_at: '2023-06-18'
-    },
-    {
-      title: 'Mastering CSS Grid Layouts',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-05-20',
-      updated_at: '2023-05-25'
-    },
-    {
-      title: 'Understanding JavaScript Closures',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-04-18',
-      updated_at: '2023-04-22'
-    },
-    {
-      title: 'Deep Dive into React Hooks',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-03-14',
-      updated_at: '2023-03-19'
-    },
-    {
-      title: 'Exploring Deno: A Modern Runtime for JavaScript',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-02-10',
-      updated_at: '2023-02-15'
-    },
-    {
-      title: 'A Guide to GraphQL Basics',
-      slug: 'introduction-to-svelte',
-      created_at: '2023-01-05',
-      updated_at: '2023-01-10'
-    }
-  ];
+  let data_tags: string[] = $state([]);
+
+  let limit_posts = $state(10);
+  let page_posts = $state(1);
+  let count_posts = $state(0);
+  let search_post: string = $state('');
+  let data_posts: BlogPost[] = $state([]);
+
+  $effect(() => {
+    const fetchTags = async () => {
+      count_tags = await blogtagapi.Count('');
+
+      let get_tags: BlogTag[] = [];
+      for (let tag_page = 1; tag_page <= Math.ceil(count_tags / 50); tag_page++) {
+        const get_data: BlogTag[] = await blogtagapi.GetAll(50, tag_page, '');
+        get_tags = [...get_tags, ...get_data];
+      }
+      data_tags = get_tags.map((tag) => tag.name);
+    };
+    fetchTags();
+  });
+
+  $effect(() => {
+    const fetchPosts = async () => {
+      count_posts = await blogpostapi.Count(search_post);
+      let get_posts: BlogPost[] = await blogpostapi.GetAll(limit_posts, page_posts, search_post);
+      data_posts = get_posts;
+    };
+    fetchPosts();
+  });
 </script>
 
 <PageLayout>
@@ -107,17 +60,15 @@
 
     <div class="input w-full">
       <MingCuteSearch2Line />
-      <input type="text" placeholder="Post name" bind:value={post_name} />
+      <input type="text" placeholder="Post name" bind:value={search_post} />
     </div>
 
-    <MultiSelect
-      inputClass="input"
+    <Svelecte
       bind:value={selected_tags}
+      multiple
       options={data_tags}
       placeholder="Tags"
-    >
-      <MingCuteTag2Line slot="expand-icon" />
-    </MultiSelect>
+    />
 
     <ul class="flex flex-col gap-y-5">
       {#each data_posts as post (post.title)}
@@ -128,13 +79,39 @@
           <li class="card-body">
             <h2 class="card-title">{post.title}</h2>
             <div class="grid grid-cols-2">
-              <p>Created at: {post.created_at}</p>
-              <p class="text-right">Updated at: {post.updated_at}</p>
+              <p>Created at: {formatDate(post.created_at)}</p>
+              <p class="text-right">Updated at: {formatDate(post.updated_at)}</p>
             </div>
+            {#if post.tags && post.tags.length > 0}
+              <div class="mt-2 flex flex-wrap gap-1">
+                {#each post.tags as tag}
+                  <span class="badge badge-soft badge-info text-xs">{tag.name}</span>
+                {/each}
+              </div>
+            {/if}
           </li>
         </a>
       {/each}
     </ul>
+
+    <div class="justify-center join">
+      {#if page_posts > 1}
+        <button class={`join-item btn btn-primary ${page_posts === 1 ? '' : 'btn-soft'}`} onclick={() => page_posts = 1}>
+          1
+        </button>
+      {/if}
+
+      <button class="join-item btn btn-primary">{page_posts}</button>
+
+      {#if page_posts < Math.ceil(count_posts / limit_posts)}
+        <button
+          class={`join-item btn btn-primary ${page_posts === Math.ceil(count_posts / limit_posts) ? '' : 'btn-soft'}`}
+          onclick={() => page_posts = Math.ceil(count_posts / limit_posts)}
+        >
+          {Math.ceil(count_posts / limit_posts)}
+        </button>
+      {/if}
+    </div>
   </main>
 
   <Footer />
