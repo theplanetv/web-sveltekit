@@ -27,4 +27,15 @@ async function GetAll(limit: number, page: number, search: string, tags: string[
   }
 }
 
-export default { Count, GetAll };
+async function GetWithSlug(slug: string): Promise<BlogPost> {
+  try {
+    const response = await fetch(`${PUBLIC_API_CHI_URL}/api/blog/posts/slug/${slug}`);
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error("Error during GetWithSlug:", error);
+    return {} as BlogPost;
+  }
+}
+
+export default { Count, GetAll, GetWithSlug };

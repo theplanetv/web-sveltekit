@@ -1,33 +1,44 @@
-<script>
+<script lang="ts">
   import SvelteMarkdown from '@humanspeak/svelte-markdown';
 
   import Footer from '../../../components/footer/Footer.svelte';
   import PageLayout from '../../../components/layout/PageLayout.svelte';
   import Menu from '../../../components/menu/Menu.svelte';
+  import type { PageProps } from './$types';
+  import blogpostapi from '../../../lib/api/blogpost';
+    import LoadingSpinner from '../../../components/loading/LoadingSpinner.svelte';
 
-  const source = `
-# This is a header
+  const { data }: PageProps = $props();
 
-This is a paragraph with **bold** and <em>mixed HTML</em>.
+  let source = $state<string>('');
+  let loading = $state(true);
 
-* List item with \`inline code\`
-* And a [link](https://svelte.dev)
-  * With nested items
-  * Supporting full markdown
+  $effect(() => {
+    const fetchPost = async () => {
+      loading = true;
+      try {
+        const post = await blogpostapi.GetWithSlug(data.slug);
+        source = post.content.replace(/\\n/g, '<br>');
+      } catch (error) {
+        console.error('Error fetching post:', error);
+      } finally {
+        loading = false;
+      }
+    };
 
-| Type       | Content                                 |
-| ---------- | --------------------------------------- |
-| Nested     | <div>**bold** and _italic_</div>        |
-| Mixed List | <ul><li>Item 1</li><li>Item 2</li></ul> |
-| Code       | <code>\`inline code\`</code>              |
-`;
+    fetchPost();
+  });
 </script>
 
 <PageLayout>
   <Menu />
 
   <article class="prose">
-    <SvelteMarkdown {source} />
+    {#if loading}
+      <LoadingSpinner />
+    {:else}
+      <SvelteMarkdown source={source} />
+    {/if}
   </article>
 
   <Footer />
