@@ -7,16 +7,8 @@
   import MingCuteSearch2Line from '../../components/icons/MingCute-Search2Line.svelte';
   import blogtagapi from '$lib/api/blogtag';
   import blogpostapi from '$lib/api/blogpost';
-  import type { BlogTag } from '$lib/types';
+  import type { BlogPost, BlogTag } from '$lib/types';
   import { formatDate } from '$lib/utils/date';
-
-  type BlogPost = {
-    title: string;
-    slug: string;
-    created_at: string;
-    updated_at: string;
-    tags: BlogTag[];
-  };
 
   let count_tags = $state(0);
   let selected_tags: string[] = $state([]);
@@ -45,10 +37,14 @@
   $effect(() => {
     const fetchPosts = async () => {
       count_posts = await blogpostapi.Count(search_post);
-      let get_posts: BlogPost[] = await blogpostapi.GetAll(limit_posts, page_posts, search_post);
+      let get_posts: BlogPost[] = await blogpostapi.GetAll(limit_posts, page_posts, search_post, selected_tags);
       data_posts = get_posts;
     };
     fetchPosts();
+
+    selected_tags;
+    search_post;
+    page_posts;
   });
 </script>
 

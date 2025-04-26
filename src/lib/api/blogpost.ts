@@ -12,9 +12,13 @@ async function Count(search: string): Promise<number> {
   }
 }
 
-async function GetAll(limit: number, page: number, search: string): Promise<BlogPost[]> {
+async function GetAll(limit: number, page: number, search: string, tags: string[]): Promise<BlogPost[]> {
   try {
-    const response = await fetch(`${PUBLIC_API_CHI_URL}/api/blog/posts?limit=${limit}&page=${page}&search=${search}`);
+    let url_query = `${PUBLIC_API_CHI_URL}/api/blog/posts?limit=${limit}&page=${page}&search=${search}`;
+    if (tags.length > 0) {
+      url_query +=`&tags=${tags.join(';')}`;
+    }
+    const response = await fetch(url_query);
     const data = await response.json();
     return data.data;
   } catch (error) {
