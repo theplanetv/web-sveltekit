@@ -27,8 +27,7 @@
     "@humanspeak/svelte-markdown": "^0.8.3",
     "daisyui": "^5.0.28",
     "dayjs": "^1.11.13",
-    "svelecte": "^5.2.0",
-    "svelte-multiselect": "^11.0.0-rc.1"
+    "svelecte": "^5.2.0"
   },
   "overrides": {
     "cookie": "^0.7.0"
