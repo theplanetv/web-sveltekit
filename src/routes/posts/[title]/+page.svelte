@@ -6,7 +6,7 @@
   import Menu from '../../../components/menu/Menu.svelte';
   import type { PageProps } from './$types';
   import blogpostapi from '../../../lib/api/blogpost';
-    import LoadingSpinner from '../../../components/loading/LoadingSpinner.svelte';
+  import LoadingSpinner from '../../../components/loading/LoadingSpinner.svelte';
 
   const { data }: PageProps = $props();
 
@@ -18,7 +18,7 @@
       loading = true;
       try {
         const post = await blogpostapi.GetWithSlug(data.slug);
-        source = post.content.replace(/\\n/g, '<br>');
+        source = post.content;
       } catch (error) {
         console.error('Error fetching post:', error);
       } finally {
