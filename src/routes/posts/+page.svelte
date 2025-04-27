@@ -10,6 +10,7 @@
   import type { BlogPost, BlogTag } from '$lib/types';
   import { formatDate } from '$lib/utils/date';
   import LoadingSpinner from '../../components/loading/LoadingSpinner.svelte';
+  import Pagination from '../../components/pagination/Pagination.svelte';
 
   let count_tags = $state(0);
   let selected_tags: string[] = $state([]);
@@ -101,24 +102,7 @@
         {/each}
       </ul>
 
-      <div class="justify-center join">
-        {#if page_posts > 1}
-          <button class={`join-item btn btn-primary ${page_posts === 1 ? '' : 'btn-soft'}`} onclick={() => page_posts = 1}>
-            1
-          </button>
-        {/if}
-
-        <button class="join-item btn btn-primary">{page_posts}</button>
-
-        {#if page_posts < Math.ceil(count_posts / limit_posts)}
-          <button
-            class={`join-item btn btn-primary ${page_posts === Math.ceil(count_posts / limit_posts) ? '' : 'btn-soft'}`}
-            onclick={() => page_posts = Math.ceil(count_posts / limit_posts)}
-          >
-            {Math.ceil(count_posts / limit_posts)}
-          </button>
-        {/if}
-      </div>
+      <Pagination current_page={page_posts} max_page={Math.ceil(count_posts / limit_posts)} />
     {/if}
   </main>
 
