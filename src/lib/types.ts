@@ -13,3 +13,14 @@ export type BlogPost = {
   is_draft: boolean;
   tags: BlogTag[];
 };
+
+export type ApiResponse<T> = {
+  data: T;
+  message: string;
+};
+
+export enum FormStatus {
+  ADD = "ADD",
+  EDIT = "EDIT",
+  DELETE = "DELETE",
+}
