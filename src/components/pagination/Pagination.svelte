@@ -1,5 +1,5 @@
 <script lang="ts">
-  let { current_page, max_page } = $props();
+  let { current_page = $bindable(1), max_page = $bindable(1) } = $props();
 </script>
 
 <div class="justify-center join">
