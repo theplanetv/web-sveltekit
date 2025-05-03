@@ -5,7 +5,7 @@
   import LoadingSpinner from "../../../../components/loading/LoadingSpinner.svelte";
   import MenuAdmin from "../../../../components/menu/MenuAdmin.svelte";
   import blogtagapi from "$lib/api/blogtag";
-  import type { BlogTag } from "$lib/types";
+  import { FormStatus, type BlogTag } from "$lib/types";
   import Pagination from "../../../../components/pagination/Pagination.svelte";
   import AdminPageLayout from "../../../../components/layout/AdminPageLayout.svelte";
   import AdminDisplayLayout from "../../../../components/layout/AdminDisplayLayout.svelte";
@@ -13,21 +13,28 @@
   import FormTag from "../../../../components/form/FormTag.svelte";
   import ToastAdmin from "../../../../components/toast/ToastAdmin.svelte";
 
+  // Page state automation
   let verified = $state(false);
   let loading = $state(true);
-  let showSelectDelete = $state(false);
 
-  let showToast = $state(false);
-  let toastMessage = $state("");
-  let toastStatus = $state<"success" | "error">("success");
-
+  // Data state interaction
   let limit = $state(10);
   let page = $state(1);
+  let search_input = $state('');
   let search = $state('');
   let count = $state(0);
   let max_page = $derived(Math.ceil(count / limit));
   let tags = $state<BlogTag[]>([]);
   let refetch = $state(false);
+
+  // Toast state interaction
+  let showToast = $state(false);
+  let toastMessage = $state("");
+  let toastStatus = $state<"success" | "error">("success");
+
+  // Form state interaction
+  let formStatus = $state<FormStatus>(FormStatus.ADD);
+  let inputTag = $state<BlogTag>({ id: "", name: "" });
 
   $inspect(page);
 
@@ -51,6 +58,7 @@
 
     refetch;
     page;
+    search;
   });
 </script>
 
@@ -65,10 +73,12 @@
 
   <AdminDisplayLayout>
     <FormTag
+      formStatus={formStatus}
       bind:refetch={refetch}
       bind:showToast={showToast}
       bind:toastMessage={toastMessage}
       bind:toastStatus={toastStatus}
+      bind:inputTag={inputTag}
     />
 
     <div class="flex flex-row justify-between">
@@ -80,17 +90,19 @@
         <button
           class="btn btn-success"
           onclick={
-            () => (document.getElementById('blog_tag_form') as HTMLDialogElement)?.showModal()
+            () => {
+              (document.getElementById('blog_tag_form') as HTMLDialogElement)?.showModal();
+              formStatus = FormStatus.ADD;
+            }
           }
         >
           Add
         </button>
-        <button class="btn btn-default" onclick={() => showSelectDelete = !showSelectDelete}>Select</button>
       </div>
 
       <div class="flex gap-x-2">
-        <input class="input" />
-        <button class="btn btn-primary">Search</button>
+        <input class="input" bind:value={search_input} />
+        <button class="btn btn-primary" onclick={() => search = search_input}>Search</button>
       </div>
     </div>
 
@@ -100,13 +112,6 @@
       <table class="table">
         <thead>
           <tr>
-            {#if showSelectDelete}
-            <th class="transition">
-              <label>
-                <input type="checkbox" class="checkbox" />
-              </label>
-            </th>
-            {/if}
             <th></th>
             <th>Name</th>
             <th>Action</th>
@@ -115,17 +120,31 @@
         <tbody>
           {#each tags as tag, index}
           <tr>
-            {#if showSelectDelete}
-            <th>
-              <label>
-                <input type="checkbox" class="checkbox" />
-              </label>
-            </th>
-            {/if}
             <th>{index + 1}</th>
             <td>{tag.name}</td>
             <td>
-              <button class="btn btn-info">Edit</button>
+              <button
+                class="btn btn-info"
+                onclick={() => {
+                  (document.getElementById('blog_tag_form') as HTMLDialogElement)?.showModal();
+                  const newTag: BlogTag = { id: tag.id, name: tag.name };
+                  inputTag = newTag;
+                  formStatus = FormStatus.EDIT}
+                }
+              >
+                Edit
+              </button>
+
+              <button
+                class="btn btn-error"
+                onclick={() => {
+                  (document.getElementById('blog_tag_form') as HTMLDialogElement)?.showModal();
+                  inputTag = tag;
+                  formStatus = FormStatus.DELETE}
+                }
+              >
+                Delete
+              </button>
             </td>
           </tr>
           {/each}

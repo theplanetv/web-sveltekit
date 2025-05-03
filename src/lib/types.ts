@@ -18,3 +18,9 @@ export type ApiResponse<T> = {
   data: T;
   message: string;
 };
+
+export enum FormStatus {
+  ADD = "ADD",
+  EDIT = "EDIT",
+  DELETE = "DELETE",
+}

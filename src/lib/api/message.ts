@@ -8,6 +8,6 @@ export enum ApiMessage {
   CREATE_SUCCESS = "Create data success!",
   UPDATE_FAILED = "Update data failed!",
   UPDATE_SUCCESS = "Update data success!",
-  DELETE_FAILED = "Delete data failed!",
-  DELETE_SUCCESS = "Delete data success!",
+  DELETE_FAILED = "Remove data failed!",
+  DELETE_SUCCESS = "Remove data success!",
 }

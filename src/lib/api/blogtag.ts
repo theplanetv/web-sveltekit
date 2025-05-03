@@ -24,14 +24,14 @@ async function GetAll(limit: number, page: number, search: string): Promise<Blog
   }
 }
 
-async function Create(name: string): Promise<ApiResponse<any>> {
+async function Create(input: BlogTag): Promise<ApiResponse<any>> {
   try {
     const response = await fetch(`${PUBLIC_API_CHI_URL}/api/blog/tags`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name: input.name }),
       credentials: 'include',
     });
     const data = await response.json();
@@ -45,22 +45,42 @@ async function Create(name: string): Promise<ApiResponse<any>> {
   }
 }
 
-async function Update(id: string, name: string): Promise<boolean> {
+async function Update(input: BlogTag): Promise<ApiResponse<any>> {
   try {
-    const response = await fetch(`${PUBLIC_API_CHI_URL}/api/blog/tags/${id}`, {
-      method: 'PUT',
+    const response = await fetch(`${PUBLIC_API_CHI_URL}/api/blog/tags`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ id: input.id, name: input.name }),
       credentials: 'include',
     });
     const data = await response.json();
-    return data.success;
+    return data;
   } catch (error) {
     console.error("Error during Update:", error);
-    return false;
+    return {
+      data: {} as BlogTag,
+      message: ApiMessage.UPDATE_FAILED,
+    };
   }
 }
 
-export default { Count, GetAll, Create, Update };
+async function Delete(id: string): Promise<ApiResponse<any>> {
+  try {
+    const response = await fetch(`${PUBLIC_API_CHI_URL}/api/blog/tags/${id}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error during Delete:", error);
+    return {
+      data: {} as string,
+      message: ApiMessage.DELETE_FAILED,
+    };
+  }
+}
+
+export default { Count, GetAll, Create, Update, Delete };
