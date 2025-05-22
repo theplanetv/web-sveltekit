@@ -1,15 +1,15 @@
-import { PUBLIC_API_CHI_URL } from "$env/static/public";
-import { ApiMessage } from "./message";
+import { PUBLIC_API_CHI_URL } from '$env/static/public';
+import { ApiMessage } from './message';
 
 async function Login(username: string, password: string): Promise<boolean> {
   try {
     const response = await fetch(`${PUBLIC_API_CHI_URL}/api/auth/login`, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({ username, password }),
-      credentials: "include",
+      credentials: 'include'
     });
 
     if (!response.ok) {
@@ -23,7 +23,7 @@ async function Login(username: string, password: string): Promise<boolean> {
     }
     return false;
   } catch (error) {
-    console.error("Error during login:", error);
+    console.error('Error during login:', error);
     return false;
   }
 }
@@ -31,12 +31,12 @@ async function Login(username: string, password: string): Promise<boolean> {
 async function Verify(): Promise<boolean> {
   try {
     const response = await fetch(`${PUBLIC_API_CHI_URL}/api/auth/verify`, {
-      credentials: "include",
+      credentials: 'include'
     });
 
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.message || "Login failed");
+      throw new Error(errorData.message || 'Login failed');
     }
 
     const data = await response.json();
@@ -45,7 +45,7 @@ async function Verify(): Promise<boolean> {
     }
     return false;
   } catch (error) {
-    console.error("Error during verify:", error);
+    console.error('Error during verify:', error);
     return false;
   }
 }

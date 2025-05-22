@@ -37,7 +37,7 @@
     {#if loading}
       <LoadingSpinner />
     {:else}
-      <SvelteMarkdown source={source} />
+      <SvelteMarkdown {source} />
     {/if}
   </article>
 

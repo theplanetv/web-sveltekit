@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "prepare": "svelte-kit sync || echo ''",
     "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+    "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^6.0.0",
@@ -17,6 +19,8 @@
     "@sveltejs/vite-plugin-svelte": "^5.0.0",
     "@tailwindcss/typography": "^0.5.16",
     "@tailwindcss/vite": "^4.1.4",
+    "prettier-plugin-svelte": "^3.4.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "svelte": "^5.28.2",
     "svelte-check": "^4.1.6",
     "tailwindcss": "^4.1.4",
@@ -27,6 +31,7 @@
     "@humanspeak/svelte-markdown": "^0.8.3",
     "daisyui": "^5.0.28",
     "dayjs": "^1.11.13",
+    "prettier": "^3.5.3",
     "svelecte": "^5.2.0"
   },
   "overrides": {

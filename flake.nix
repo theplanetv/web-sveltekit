@@ -2,7 +2,7 @@
   description = "web-sveltekit flake for theplanetv website";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   };
 
   outputs = { self, nixpkgs }:
@@ -20,7 +20,7 @@
         default = with pkgs;
           mkShell {
             nativeBuildInputs = [
-              deno
+              nodejs
             ];
           };
       });
