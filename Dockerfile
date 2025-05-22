@@ -1,10 +1,10 @@
-FROM denoland/deno:alpine
+FROM node:24-alpine
 
 WORKDIR /web-sveltekit
 
 COPY . .
 
-RUN deno install
-RUN deno task build
+RUN npm install
+RUN npm run build
 
-CMD ["deno", "run", "preview", "--host", "0.0.0.0"]
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0"]

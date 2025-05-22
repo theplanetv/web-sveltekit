@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is running Github Actions 🚀
 on:
   push:
     branches-ignore:
-      - "master"
+      - 'master'
 
 jobs:
   enter-nix-flake-shell:

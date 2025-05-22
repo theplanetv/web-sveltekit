@@ -44,7 +44,12 @@
     const fetchPosts = async () => {
       loading_posts = true;
       count_posts = await blogpostapi.Count(search_post);
-      let get_posts: BlogPost[] = await blogpostapi.GetAll(limit_posts, page_posts, search_post, selected_tags);
+      let get_posts: BlogPost[] = await blogpostapi.GetAll(
+        limit_posts,
+        page_posts,
+        search_post,
+        selected_tags
+      );
       data_posts = get_posts;
       loading_posts = false;
     };
@@ -71,7 +76,7 @@
       bind:value={selected_tags}
       multiple
       options={data_tags}
-      placeholder={loading_tags ? "Loading tags..." : "Tags"}
+      placeholder={loading_tags ? 'Loading tags...' : 'Tags'}
       disabled={loading_tags}
     />
 
